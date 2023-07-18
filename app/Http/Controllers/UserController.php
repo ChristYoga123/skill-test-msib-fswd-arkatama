@@ -19,6 +19,13 @@ class UserController extends Controller
         ]);
 
         $array_data = explode(' ', strtoupper($request->data));
+        $array_data = array_map(function ($value) {
+            if (is_string($value)) {
+                $value = str_replace(array("TAHUN", "THN", "TH"), "", $value);
+            }
+            return $value;
+        }, $array_data);
+
         $nama = "";
         $umur = "";
         $kota = "";
