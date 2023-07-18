@@ -18,24 +18,32 @@ class UserController extends Controller
             "data" => "required",
         ]);
 
-        $array_data = explode(' ', $request->data);
+        $array_data = explode(' ', strtoupper($request->data));
         $nama = "";
         $umur = "";
         $kota = "";
+        foreach ($array_data as $idx => $data) {
+            if (is_numeric($data)) {
+                break;
+            }
+            $nama .= $data . " ";
+            unset($array_data[$idx]);
+        }
         foreach ($array_data as $idx => $value) {
             if (is_numeric($value)) {
                 $umur = $value;
                 unset($array_data[$idx]);
-            } else {
-                $nama .= $value . " ";
-                unset($array_data[$idx]);
-                $kota .= $value . " ";
             }
         }
+
+        foreach ($array_data as $idx => $value) {
+            $kota .= $value . " ";
+            unset($array_data[$idx]);
+        }
         User::create([
-            "name" => $nama,
+            "name" => trim($nama),
             "age" => $umur,
-            "city" => $kota
+            "city" => trim($kota)
         ]);
 
         return response()->json("OK");
